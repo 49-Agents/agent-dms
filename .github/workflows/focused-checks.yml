@@ -1,0 +1,23 @@
+name: focused-feature-checks
+on: [push, pull_request]
+jobs:
+  features:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --require-hashes -r requirements-dev.lock
+      - run: python -m pip install --no-deps -e .
+      - run: pytest -q tests/test_storage_identity.py tests/test_sessions_status.py
+      - run: pytest -q tests/test_messages_history.py tests/test_inbox_claims.py
+      - run: pytest -q tests/test_workstreams.py tests/test_mcp_integration.py
+      - run: pytest -q tests/test_stdio_bridge.py tests/test_watch_receipts.py
+      - run: pytest -q tests/test_cli_backup.py
+      - run: python -m build
+      - run: agent-dms --help
+      - run: python scripts/validate_artifact.py

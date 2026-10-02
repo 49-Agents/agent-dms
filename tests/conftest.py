@@ -70,3 +70,29 @@ def error(code, fn):
     with pytest.raises(DomainError) as exc:
         fn()
     assert exc.value.code == code
+
+@pytest.fixture
+async def live(h):
+    import asyncio
+    import socket
+    import uvicorn
+    from agent_dms.mcp_server import create_app
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = sock.getsockname()[1]
+    app = create_app(h.service.store, hosts=[f"127.0.0.1:{port}"], capacity=64)
+    server = uvicorn.Server(uvicorn.Config(app, log_level="critical", access_log=False, proxy_headers=False))
+    task = asyncio.create_task(server.serve(sockets=[sock]))
+    for _ in range(100):
+        if server.started:
+            break
+        if task.done():
+            await task
+        await asyncio.sleep(0.01)
+    assert server.started
+    try:
+        yield f"http://127.0.0.1:{port}/mcp", app
+    finally:
+        server.should_exit = True
+        await asyncio.wait_for(task, 5)
+        sock.close()

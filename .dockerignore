@@ -1,0 +1,12 @@
+.git
+.venv
+.agent-dms
+__pycache__
+.pytest_cache
+dist
+build
+*.egg-info
+tests
+**/__pycache__
+**/*.pyc
+**/*.egg-info

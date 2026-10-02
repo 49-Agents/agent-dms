@@ -1,0 +1,10 @@
+services:
+  agent-dms:
+    build: .
+    user: "10001:10001"
+    ports:
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - agent-dms-data:/data
+volumes:
+  agent-dms-data:

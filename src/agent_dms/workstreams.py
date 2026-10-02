@@ -48,7 +48,7 @@ class WorkstreamsMixin:
             parent = self.visible_message(conn, agent["id"], ack_message_id)
             if parent["workstream_id"] != workstream_id or parent["recipient_id"] != agent["id"]:
                 fail("CLAIM_INVALID", "Acknowledged message must be incoming in this workstream")
-            self.ack_items(conn, agent, session_id, claim_token, [ack_message_id], None)
+            self.ack_items(conn, agent, session_id, claim_token, [ack_message_id], None, require_active=True)
         elif claim_token is not None:
             fail("VALIDATION_ERROR", "claim_token requires ack_message_id")
         next_state, kind = transition[1:]

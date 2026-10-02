@@ -1,0 +1,3 @@
+[mcp_servers.agent_dms]
+url = "http://127.0.0.1:8765/mcp"
+bearer_token_env_var = "AGENT_DMS_TOKEN"

@@ -63,3 +63,18 @@ def test_token_file_failure_preserves_digest(h, monkeypatch):
     with pytest.raises(OSError):
         h.service.rotate_token(a)
     assert h.call(a, "agent_whoami")["agent_id"] == a
+
+
+def test_sqlite_uri_special_path_characters(tmp_path):
+    harness = Harness(tmp_path / "project?#with space")
+    agent = harness.add("path test")
+    assert harness.call(agent, "agent_whoami")["agent_id"] == agent
+
+
+def test_name_and_declared_metadata_boundaries(h):
+    h.add("n" * 64)
+    for value in ("", " \t", "n" * 65, "name\x00bad", "name\nline"):
+        error("VALIDATION_ERROR", lambda value=value: h.add(value))
+    h.service.add_agent("metadata", "p" * 100, "m" * 200)
+    error("VALIDATION_ERROR", lambda: h.service.add_agent("bad-provider", "p" * 101))
+    error("VALIDATION_ERROR", lambda: h.service.add_agent("bad-model", model="m" * 201))

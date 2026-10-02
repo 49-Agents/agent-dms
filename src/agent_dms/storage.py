@@ -50,13 +50,19 @@ class Store:
     def connect(self):
         if not self.path.is_file():
             fail("VALIDATION_ERROR", "Missing initialized database")
-        conn = sqlite3.connect(f"file:{self.path}?mode=rw", uri=True, isolation_level=None, timeout=5)
+        conn = sqlite3.connect(self.path.as_uri() + "?mode=rw", uri=True, isolation_level=None, timeout=5)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA foreign_keys=ON")
-        conn.execute("PRAGMA busy_timeout=5000")
-        conn.execute("PRAGMA synchronous=FULL")
-        conn.execute("PRAGMA journal_mode=WAL")
-        return conn
+        try:
+            conn.execute("PRAGMA foreign_keys=ON")
+            conn.execute("PRAGMA busy_timeout=5000")
+            conn.execute("PRAGMA synchronous=FULL")
+            conn.execute("PRAGMA journal_mode=WAL")
+            return conn
+        except sqlite3.OperationalError as exc:
+            conn.close()
+            if "locked" in str(exc) or "busy" in str(exc):
+                fail("STORAGE_BUSY", "Storage is busy; retry with the same key", True)
+            raise
 
     @contextmanager
     def transaction(self):

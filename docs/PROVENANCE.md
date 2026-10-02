@@ -57,3 +57,17 @@ Codex transport/configuration guidance was checked against the
 The inspected local CLI exposes `codex queue --thread UUID --message TEXT`;
 that native wakeup command must remain capability-detected rather than assumed
 to be present in every Codex installation.
+
+## Original implementation
+
+The v1 implementation was authored independently against the accepted contract.
+No Qorqut, ACLA or competitor implementation code was copied or adapted. The
+installed MCP 2.2.0 API/source signatures were read to integrate its low-level
+Server callbacks, official clients and StreamableHTTPSessionManager. Manager
+amendment M01 authorizes a narrow SDK-typed cancellation integration; it does
+not fork or monkey-patch the SDK. Licensing notes are in THIRD_PARTY_NOTICES.md.
+
+Official Codex and Claude MCP configuration pages were fetched on 2026-10-02.
+Examples use scoped TOML/JSON, HTTP bearer environment variables, or local private
+token-file stdio adapters. Configuration parsing and actual SDK wire acceptance
+are distinct from native provider-client verification; see implementation results.

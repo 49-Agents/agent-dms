@@ -88,3 +88,13 @@ def test_ack_transaction_fault(h, peers):
         conn.execute("DROP TRIGGER ack_fault")
     h.call(b, "inbox_ack", claim_token=claim["claim_token"], message_ids=[m["message_id"] for m in sent])
     assert h.call(b, "inbox_peek")["counts"]["pending"] == 0
+
+
+def test_new_reply_ack_requires_current_unhandled_parent(h, peers):
+    a, b, _ = peers
+    sent = h.send(a, b)
+    batch = h.call(b, "inbox_next")
+    args = dict(message_id=sent["message_id"], body="done", acknowledge_parent=True, claim_token=batch["claim_token"])
+    h.call(b, "dm_reply", **args)
+    error("CLAIM_INVALID", lambda: h.call(b, "dm_reply", **args))
+    assert h.call(a, "inbox_peek")["counts"]["pending"] == 1

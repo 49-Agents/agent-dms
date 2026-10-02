@@ -66,11 +66,13 @@ class InboxMixin:
         if not isinstance(ids, list) or not 1 <= len(ids) <= 100 or any(not isinstance(i, str) for i in ids) or len(set(ids)) != len(ids):
             fail("VALIDATION_ERROR", "message_ids requires 1–100 distinct IDs")
 
-    def ack_items(self, conn, agent, session_id, claim_token, message_ids, outcome):
+    def ack_items(self, conn, agent, session_id, claim_token, message_ids, outcome, *, require_active=False):
         self.distinct_ids(message_ids)
         if outcome is not None:
             text(outcome, "outcome", 2000, required=False)
         claim = self.owned_claim(conn, agent, session_id, claim_token)
+        if require_active:
+            self.active_claim(conn, claim)
         token_hash = claim["token_digest"]
         validated = []
         for message_id in message_ids:
@@ -78,6 +80,8 @@ class InboxMixin:
             if row is None:
                 fail("CLAIM_INVALID", "Every ID must belong to the exact claim")
             if row["handled_at"] is not None:
+                if require_active:
+                    fail("CLAIM_INVALID", "Reply/transition ACK requires a currently leased parent")
                 if row["ack_claim_digest"] != token_hash or row["outcome"] != outcome:
                     fail("CLAIM_INVALID", "Acknowledgement conflicts with the first receipt")
             else:

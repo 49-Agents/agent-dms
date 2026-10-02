@@ -62,7 +62,7 @@ class MessagingMixin:
             fail("NOT_FOUND", "Incoming message not found")
         self.active_peer(conn, agent["id"], parent["sender_id"])
         if acknowledge_parent:
-            self.ack_items(conn, agent, session_id, claim_token, [message_id], None)
+            self.ack_items(conn, agent, session_id, claim_token, [message_id], None, require_active=True)
         elif claim_token is not None:
             fail("VALIDATION_ERROR", "claim_token requires acknowledge_parent=true")
         return self.emit_message(conn, agent["id"], parent["sender_id"], parent["thread_id"], body, reply_to=message_id)
