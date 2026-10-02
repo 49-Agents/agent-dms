@@ -78,3 +78,99 @@ def test_name_and_declared_metadata_boundaries(h):
     h.service.add_agent("metadata", "p" * 100, "m" * 200)
     error("VALIDATION_ERROR", lambda: h.service.add_agent("bad-provider", "p" * 101))
     error("VALIDATION_ERROR", lambda: h.service.add_agent("bad-model", model="m" * 201))
+
+
+def tree_state(root):
+    return {str(p.relative_to(root)): (p.stat().st_mode & 0o777, None if p.is_dir() else p.read_bytes())
+            for p in [root, *root.rglob('*')]}
+
+
+@pytest.mark.parametrize('mode', [0o755, 0o700])
+def test_rejected_init_preserves_populated_directory(tmp_path, mode):
+    project = tmp_path / 'project'
+    project.mkdir()
+    target = tmp_path / 'occupied'
+    target.mkdir(mode=mode)
+    target.chmod(mode)
+    (target / 'retain').write_text('unrelated contents')
+    before = tree_state(target)
+    error('VALIDATION_ERROR', lambda: initialize(project, target))
+    assert tree_state(target) == before
+    assert not (target / 'init.lock').exists()
+
+
+def test_wrong_project_init_preflight_preserves_state(h, tmp_path):
+    other = tmp_path / 'other-project'
+    other.mkdir()
+    (h.data_dir / 'init.lock').unlink()
+    before = tree_state(h.data_dir)
+    error('VALIDATION_ERROR', lambda: initialize(other, h.data_dir))
+    assert tree_state(h.data_dir) == before
+    assert not (h.data_dir / 'init.lock').exists()
+
+
+def test_nested_private_creation_preserves_existing_ancestors(tmp_path):
+    project = tmp_path / 'public-parent'
+    project.mkdir(mode=0o755)
+    project.chmod(0o755)
+    target = project / 'nested' / 'private' / 'state'
+    config = initialize(project, target)
+    assert initialize(project, target) == config
+    assert project.stat().st_mode & 0o777 == 0o755
+    for path in (project / 'nested', project / 'nested/private', target, target / 'credentials'):
+        assert path.stat().st_mode & 0o777 == 0o700
+
+
+def test_existing_unsafe_empty_or_file_targets_unchanged(tmp_path):
+    project = tmp_path / 'project'
+    project.mkdir()
+    target = tmp_path / 'unsafe-empty'
+    target.mkdir(mode=0o755)
+    target.chmod(0o755)
+    before = tree_state(target)
+    with pytest.raises(DomainError, match='repair their permissions'):
+        initialize(project, target)
+    assert tree_state(target) == before
+    file_target = tmp_path / 'file'
+    file_target.write_text('retain')
+    before = (file_target.read_bytes(), file_target.stat().st_mode)
+    error('VALIDATION_ERROR', lambda: initialize(project, file_target))
+    assert (file_target.read_bytes(), file_target.stat().st_mode) == before
+
+
+def test_credential_directory_rejects_unsafe_mode_without_writes(h):
+    agent = h.add('existing')
+    credentials = h.data_dir / 'credentials'
+    credentials.chmod(0o755)
+    before = tree_state(credentials)
+    for operation in (lambda: h.add('new'), lambda: h.service.rotate_token(agent), lambda: Store(h.data_dir)):
+        error('VALIDATION_ERROR', operation)
+        assert tree_state(credentials) == before
+    assert h.call(agent, 'agent_whoami')['agent_id'] == agent
+
+
+def test_concurrent_initialization_excludes_partial_publishing(tmp_path, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+    import agent_dms.storage as storage
+    project = tmp_path / 'project'
+    project.mkdir()
+    target = project / '.agent-dms'
+    entered, resume = Event(), Event()
+    write = storage.private_write
+    def paused_write(path, data):
+        if path.name == '.gitignore':
+            entered.set()
+            assert resume.wait(3)
+        return write(path, data)
+    monkeypatch.setattr(storage, 'private_write', paused_write)
+    with ThreadPoolExecutor(2) as pool:
+        first = pool.submit(initialize, project)
+        try:
+            assert entered.wait(3)
+            error('CAPACITY_LIMIT', lambda: initialize(project))
+        finally:
+            resume.set()
+        config = first.result()
+    assert initialize(project) == config
+    assert Store(target).config == config

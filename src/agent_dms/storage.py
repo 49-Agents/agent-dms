@@ -6,7 +6,7 @@ import sqlite3
 from contextlib import contextmanager
 from importlib.resources import files
 
-from .config import ProjectConfig, load_config, private_dir, private_write, safe_path
+from .config import ProjectConfig, load_config, private_dir, private_write, safe_path, validate_directory
 from .errors import DomainError, fail
 from .models import canonical, new_id, utc_ms
 
@@ -20,6 +20,10 @@ class ProcessLock:
 
     def __enter__(self):
         self.fd = os.open(self.path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
+        if os.fstat(self.fd).st_mode & 0o077:
+            os.close(self.fd)
+            self.fd = None
+            fail("VALIDATION_ERROR", "Lock file must already be private; repair its permissions to 0600 before retrying")
         try:
             fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
@@ -37,6 +41,8 @@ class ProcessLock:
 class Store:
     def __init__(self, data_dir, clock=utc_ms, id_factory=new_id):
         self.data_dir = safe_path(data_dir)
+        validate_directory(self.data_dir)
+        validate_directory(self.data_dir / "credentials")
         self.config = load_config(data_dir)
         self.path = safe_path(self.data_dir / "state.sqlite3")
         self.clock = clock
@@ -97,20 +103,34 @@ class Store:
             conn.close()
 
 
+def initialization_preflight(root, project_root):
+    """Read-only rejection checks, repeated authoritatively under the init lock."""
+    if not root.exists():
+        return None
+    validate_directory(root)
+    if safe_path(root / "project.json").exists():
+        config = load_config(root)
+        if config.project_root != str(project_root):
+            fail("VALIDATION_ERROR", "State directory belongs to a different project root")
+        validate_directory(root / "credentials")
+        return config
+    if any(p.name != "init.lock" for p in root.iterdir()):
+        fail("VALIDATION_ERROR", "Refusing to initialize a populated state directory")
+    return None
+
+
 def initialize(project_root, data_dir=None, *, clock=utc_ms, id_factory=new_id):
     project_root = safe_path(project_root)
     if not project_root.is_dir():
         fail("VALIDATION_ERROR", "project-root must be an existing directory")
-    root = private_dir(data_dir or project_root / ".agent-dms")
+    root = safe_path(data_dir or project_root / ".agent-dms")
+    initialization_preflight(root, project_root)
+    private_dir(root)
     with ProcessLock(root / "init.lock"):
-        if (root / "project.json").exists():
-            config = load_config(root)
-            if config.project_root != str(project_root):
-                fail("VALIDATION_ERROR", "State directory belongs to a different project root")
+        config = initialization_preflight(root, project_root)
+        if config is not None:
             Store(root, clock, id_factory)
             return config
-        if any(p.name != "init.lock" for p in root.iterdir()):
-            fail("VALIDATION_ERROR", "Refusing to initialize a populated state directory")
         config = ProjectConfig(project_id=id_factory(), project_root=str(project_root), display_name=project_root.name)
         private_write(root / ".gitignore", "*\n")
         private_dir(root / "credentials")

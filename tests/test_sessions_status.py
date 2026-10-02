@@ -69,3 +69,49 @@ def test_open_retry_authority_and_offline_directory(h, peers):
     assert [v["agent_id"] for v in online] == [b]
     assert len(h.call(b, "agents_list", include_offline=True)["items"]) == 3
     assert h.call(b, "agent_get", agent_id=a)["presence"] == "offline"
+
+
+def test_saved_session_open_replay_renews_contact_without_changing_receipt_or_status(h, peers):
+    a, b, _ = peers
+    args = dict(client_session_key='saved-conversation', status='Initial assertion', availability='working',
+                takeover=True, idempotency_key='saved-contact')
+    opened = h.service.call(h.tokens[a], 'session_open', args)
+    h.sessions[a] = opened['session_id']
+    h.call(a, 'status_set', status='Newer assertion must remain', availability='blocked', expected_revision=2)
+    with h.service.store.transaction() as conn:
+        status = dict(conn.execute('SELECT * FROM statuses WHERE agent_id=?', (a,)).fetchone())
+        receipt = dict(conn.execute("SELECT * FROM idempotency WHERE principal_id=? AND operation='session_open' AND key='saved-contact'", (a,)).fetchone())
+    h.clock.advance(900_001)
+    assert h.call(b, 'agent_get', agent_id=a)['presence'] == 'offline'
+    assert h.service.call(h.tokens[a], 'session_open', args) == opened
+    with h.service.store.transaction() as conn:
+        session = dict(conn.execute('SELECT * FROM sessions WHERE id=?', (opened['session_id'],)).fetchone())
+        assert dict(conn.execute('SELECT * FROM statuses WHERE agent_id=?', (a,)).fetchone()) == status
+        assert dict(conn.execute("SELECT * FROM idempotency WHERE principal_id=? AND operation='session_open' AND key='saved-contact'", (a,)).fetchone()) == receipt
+    assert session['last_seen_at'] == h.clock()
+    assert session['lease_until'] == h.clock() + 900_000
+    view = h.call(b, 'agent_get', agent_id=a)
+    assert view['presence'] == 'online' and not view['status_fresh']
+    assert view['status'] == 'Newer assertion must remain'
+
+
+@pytest.mark.parametrize('invalid,code', [('conflicting', 'IDEMPOTENCY_CONFLICT'), ('closed', 'SESSION_REQUIRED'),
+                                        ('superseded', 'SESSION_SUPERSEDED'), ('revoked', 'UNAUTHENTICATED')])
+def test_failed_saved_session_open_replay_never_touches_sessions(h, invalid, code):
+    a = h.add('agent')
+    args = dict(client_session_key='stable', status='Original status', availability='working', idempotency_key='saved')
+    h.sessions[a] = h.service.call(h.tokens[a], 'session_open', args)['session_id']
+    if invalid == 'conflicting':
+        args = {**args, 'status': 'Different input'}
+    elif invalid == 'closed':
+        h.call(a, 'session_close')
+    elif invalid == 'superseded':
+        h.open(a, 'replacement', takeover=True)
+    elif invalid == 'revoked':
+        h.service.revoke(a)
+    with h.service.store.transaction() as conn:
+        before = [dict(row) for row in conn.execute('SELECT * FROM sessions ORDER BY generation')]
+    h.clock.advance(900_001)
+    error(code, lambda: h.service.call(h.tokens[a], 'session_open', args))
+    with h.service.store.transaction() as conn:
+        assert [dict(row) for row in conn.execute('SELECT * FROM sessions ORDER BY generation')] == before

@@ -52,6 +52,11 @@ atomically releases old claims and fences the old generation. Own-current-key
 reconnect/heartbeat may renew an expired lease until another key replaces it.
 Lease duration is 15 minutes; online presence requires contact within 90 seconds.
 Successful session operations renew last-seen and lease, independently of status.
+An identical `session_open` idempotency replay validates and renews exactly its
+saved current active session, then returns the original saved response (including
+its original timestamps). It preserves newer status and the saved receipt.
+Closed/superseded sessions, revoked credentials and conflicting-input replays
+cannot renew contact. Read the directory/heartbeat result for current liveness.
 
 Status normalizes NFC and collapses Unicode whitespace. Words are deterministic
 whitespace-separated fields, with no language-specific linguistic segmentation.

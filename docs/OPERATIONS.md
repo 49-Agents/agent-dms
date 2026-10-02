@@ -19,6 +19,11 @@ agent-dms doctor --data-dir /private/project/.agent-dms
 Init defaults to `.agent-dms`, or accepts an explicit data directory. It creates
 one UUID, configuration, SQLite schema, private credentials directory, cursor
 key and an ignore-all state `.gitignore`. Directories are 0700 and files 0600.
+Missing nested directories are created privately, without changing existing
+ancestors. Existing dedicated state/credential directories must already exclude
+group/other access; repair them to 0700 explicitly before retrying. Init preflights
+populated/wrong-project/file/permission targets before creating its lock, then
+validates again under the lock. A normal rejection preserves contents and modes.
 Symlink targets are refused. Re-init of the same project preserves identity and
 history; different/populated targets are refused. It never edits the parent
 project's ignore file or client/global configuration.
@@ -121,6 +126,15 @@ queue capability/pre-spawn failure is not_started, with retry delay capped at
 60 seconds. Once dispatch may have started, nonzero/timeout/interruption becomes
 uncertain. Restart quarantines unfinished dispatching receipts.
 
+The base target is service/agent/sink/native-thread/workspace, across application
+sessions. Uncertain or dispatching receipts block **all sessions** at that target.
+Receipt intentions and accepted revision watermarks are session-specific. After
+successful current-session authentication, and only when the target is unblocked,
+old-session pending/not_started intentions become terminal `superseded` records.
+Their IDs, captured intentions, attempts and history remain, with a supersession
+reason/time. A new session can receive the same numeric revision; same-session
+accepted revisions stay suppressed. Empty hints create no new receipt or dispatch.
+
 ```sh
 agent-dms watch receipts --ledger .agent-dms/watch/receipts.sqlite3
 agent-dms watch resolve --ledger .agent-dms/watch/receipts.sqlite3 \
@@ -132,12 +146,30 @@ agent-dms watch resolve --ledger .agent-dms/watch/receipts.sqlite3 \
 
 Stop the watcher before inspecting/resolving its ledger, since only one process
 may own it. Resolution affects exactly that uncertain local receipt; retry
-preserves its identity/captured revision. It never acknowledges or deletes a DM.
-An uncertain target blocks later coalesced wakeups until reconciliation. No
+preserves its identity/captured revision if its session is still current.
+`--delivered` accepts only the receipt's original session/revision. `--retry`
+returns that exact intention to pending; a later authenticated watcher with a
+different current session supersedes it and may create fresh current-session
+work. Resolution never authorizes dispatch using a closed/superseded application
+session and never acknowledges or deletes a DM. An uncertain target blocks later
+coalesced wakeups across sessions until reconciliation. No
 unchanged/empty per-poll receipt or log history is created. Network outages emit
 one safe outage/recovery diagnostic with capped backoff; auth/supersession stops.
 Stdout broken pipes stop without replay. Normal termination may leave dispatching
 state, deliberately treated as uncertain on restart.
+
+The private local ledger uses schema version 1 (`PRAGMA user_version`), separate
+from authoritative project schema 1. Opening a legacy unversioned ledger under
+its exclusive process lock atomically rebuilds receipt uniqueness as
+`(target, session_id, revision)` and reconstructs per-session acceptance from
+emitted/accepted receipts. Existing IDs/fields/outcomes and target rows, including
+legacy global accepted values as historical data, are retained. Interrupted
+dispatches are quarantined as uncertain. Migration failures roll back; unknown or
+newer schemas are refused without rewriting the ledger. Retain a secure copy of
+the stopped ledger before upgrading; never delete history to recover a watcher.
+An arbitrary existing ledger parent keeps its mode; new ledger/lock files are
+private, and missing nested parents are created with 0700. Symlinks and nonprivate
+ledger/lock files are refused; repair file permissions explicitly to 0600.
 
 ## Container recipe
 

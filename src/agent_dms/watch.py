@@ -111,7 +111,7 @@ async def watch(url, token_file, session_id, ledger_path, sink="stdout", thread=
                 async with connect(url, token) as client:
                     who = await call(client, "agent_whoami", {})
                     target = digest(canonical({"url": url, "agent_id": who["agent_id"], "sink": sink, "thread": thread, "workspace": None if workspace is None else str(Path(workspace).absolute())}))
-                    observed_revision = ledger.accepted_revision(target)
+                    observed_revision = ledger.accepted_revision(target, session_id)
                     while True:
                         await call(client, "session_heartbeat", {"session_id": session_id})
                         hint = await call(client, "inbox_wait", {"session_id": session_id, "after_revision": observed_revision, "timeout_seconds": 25})

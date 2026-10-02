@@ -69,3 +69,39 @@ async def test_second_daemon_fails_clearly(h, live):
     assert process.returncode == 1 and stdout == b""
     assert json.loads(stderr)["code"] == "CAPACITY_LIMIT"
     assert "active owner" in json.loads(stderr)["message"]
+
+
+def test_restore_directory_preflight_private_nesting_and_symlinks(h, tmp_path):
+    from conftest import error
+    from test_storage_identity import tree_state
+    snapshot = tmp_path / 'snapshot.sqlite3'
+    backup(h.service.store, snapshot)
+    for mode in (0o755, 0o700):
+        occupied = tmp_path / f'occupied-{mode}'
+        occupied.mkdir(mode=mode)
+        occupied.chmod(mode)
+        (occupied / 'retain').write_text('unrelated')
+        before = tree_state(occupied)
+        error('VALIDATION_ERROR', lambda: restore(snapshot, occupied))
+        assert tree_state(occupied) == before
+    unsafe = tmp_path / 'unsafe-empty'
+    unsafe.mkdir(mode=0o755)
+    unsafe.chmod(0o755)
+    before = tree_state(unsafe)
+    error('VALIDATION_ERROR', lambda: restore(snapshot, unsafe))
+    assert tree_state(unsafe) == before
+    alias = tmp_path / 'alias'
+    alias.symlink_to(unsafe, target_is_directory=True)
+    error('VALIDATION_ERROR', lambda: restore(snapshot, alias / 'new'))
+    assert tree_state(unsafe) == before
+    parent = tmp_path / 'shared-parent'
+    parent.mkdir(mode=0o755)
+    parent.chmod(0o755)
+    target = parent / 'nested/private/state'
+    restore(snapshot, target)
+    assert parent.stat().st_mode & 0o777 == 0o755
+    for directory in (parent / 'nested', parent / 'nested/private', target, target / 'credentials'):
+        assert directory.stat().st_mode & 0o777 == 0o700
+    empty_private = tmp_path / 'empty-private'
+    empty_private.mkdir(mode=0o700)
+    assert restore(snapshot, empty_private)['project_id'] == h.service.store.config.project_id

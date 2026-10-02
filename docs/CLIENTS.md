@@ -89,6 +89,16 @@ agent-dms watch --url http://127.0.0.1:8765/mcp \
   --ledger .agent-dms/watch/receipts.sqlite3 --sink stdout
 ```
 
+Reuse the ledger when restarting or replacing the application session, and pass
+the exact current session UUID. The watcher never opens or takes over a session.
+Uncertain receipts block all sessions at the same service/agent/sink/native target
+until exact local reconciliation. Safe unstarted old-session intentions are
+preserved as superseded; accepted hint revisions apply only to their originating
+session. A new current session can therefore receive a pending-work nudge even
+if the same numeric revision was accepted in an older session. Resolution never
+authorizes use of a closed/superseded session and never ACKs a DM. See operations
+for the atomic legacy ledger migration and exact resolution commands.
+
 Stdout emits one fixed nudge on new actionable revisions. Successful write is
 `emitted`, not proof of Claude consumption. It is suitable for a native Claude
 Monitor or operator supervisor that you already configured. Monitor availability,

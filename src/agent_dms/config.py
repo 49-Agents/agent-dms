@@ -23,10 +23,31 @@ def safe_path(path):
     return p
 
 
-def private_dir(path):
+def validate_directory(path, *, private=True):
     path = safe_path(path)
-    path.mkdir(parents=True, exist_ok=True, mode=0o700)
-    os.chmod(path, 0o700)
+    if not path.is_dir():
+        fail("VALIDATION_ERROR", "Directory target must be an existing directory")
+    if private and path.stat().st_mode & 0o077:
+        fail("VALIDATION_ERROR", "Dedicated state and credential directories must already be private; repair their permissions to 0700 before retrying")
+    return path
+
+
+def private_dir(path, *, private_existing=True):
+    """Create each missing directory privately; never chmod existing ancestors."""
+    path = safe_path(path)
+    missing = []
+    ancestor = path
+    while not ancestor.exists():
+        missing.append(ancestor)
+        ancestor = ancestor.parent
+    validate_directory(ancestor, private=False)
+    for directory in reversed(missing):
+        try:
+            directory.mkdir(mode=0o700)
+        except FileExistsError:
+            # A concurrent creator must still provide a safe, private directory.
+            validate_directory(directory)
+    validate_directory(path, private=private_existing)
     return path
 
 

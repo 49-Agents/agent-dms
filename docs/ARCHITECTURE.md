@@ -72,12 +72,23 @@ stateDiagram-v2
   not_started --> dispatching: Capped retry, same receipt
   uncertain --> pending: Explicit exact receipt retry resolution
   uncertain --> accepted: Explicit delivered resolution
+  pending --> superseded: Different authenticated session, target unblocked
+  not_started --> superseded: Different authenticated session, target unblocked
+  superseded --> [*]: Retained terminal intention
 ```
 
 Notification revisions are hints, independent of delivery authority. All pending
 pages contribute to counts. Only captured revision is accepted after dispatch;
-new arrivals remain observable. Uncertain receipts block subsequent wakeups for
-the target until explicit reconciliation. No empty-poll receipt/log history.
+new arrivals remain observable. Base targets exclude application sessions, so
+uncertain/dispatching receipts block every session at that target until exact
+reconciliation. In one local transaction, an unblocked target retires old-session
+unstarted intentions and selects/creates current-session work. Intention uniqueness
+and acceptance are keyed by target/session/revision and target/session respectively.
+Superseded receipts retain their original fields plus supersession reason/time.
+Versioned local ledger schema 1 atomically migrates legacy history under its
+exclusive lock; legacy target watermarks remain historical, with per-session
+acceptance reconstructed from accepted/emitted rows. No empty-poll receipt/log
+history. The project message database schema is unchanged.
 
 The SDK's stateless HTTP dispatcher is per-request, so native cancellation POSTs
 cannot reach earlier requests by themselves. Manager amendment M01 permits a

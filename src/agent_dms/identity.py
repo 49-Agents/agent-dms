@@ -2,7 +2,7 @@ import hmac
 import secrets
 import sqlite3
 
-from .config import private_write, safe_path
+from .config import private_dir, private_write, safe_path, validate_directory
 from .errors import fail
 from .models import agent_name, digest, text
 
@@ -24,6 +24,8 @@ class IdentityMixin:
         name = agent_name(name)
         provider = None if provider is None else text(provider, "provider", 100, required=False)
         model = None if model is None else text(model, "model", 200, required=False)
+        validate_directory(self.store.data_dir)
+        private_dir(self.store.data_dir / "credentials")
         agent_id, token = self.store.id_factory(), secrets.token_urlsafe(32)
         path = self.store.data_dir / "credentials" / f"{agent_id}-{self.store.id_factory()}.token"
         private_write(path, token + "\n")
@@ -49,6 +51,8 @@ class IdentityMixin:
         return {"agent_id": agent_id, "state": "revoked"}
 
     def rotate_token(self, agent_id):
+        validate_directory(self.store.data_dir)
+        private_dir(self.store.data_dir / "credentials")
         with self.store.transaction() as conn:
             row = conn.execute("SELECT id FROM agents WHERE id=?", (agent_id,)).fetchone()
             if row is None:

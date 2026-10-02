@@ -48,7 +48,8 @@ class Service(IdentityMixin, SessionsMixin, StatusMixin, MessagingMixin, InboxMi
                         fail("IDEMPOTENCY_CONFLICT", "This key was committed with different input")
                     result = json.loads(receipt["response"])
                     if operation == "session_open":
-                        self.current_session(conn, agent, result["session_id"])
+                        saved_session = self.current_session(conn, agent, result["session_id"])
+                        self.touch(conn, saved_session)
                     if operation == "inbox_next" and result.get("claim_token"):
                         self.recover_expired(conn, agent["id"])
                         claim = conn.execute("SELECT * FROM claims WHERE token_digest=?", (digest(result["claim_token"]),)).fetchone()
