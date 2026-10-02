@@ -1,7 +1,7 @@
 # Implementation results — 0.1.0
 
-Implementation source commit: `8d3fe536e29506770ac005088cbc733513fd019f`
-(`8d3fe53`), branch `feat/agent-dms-v1`. This evidence is finalized in a subsequent
+Implementation source commit: `c96446c95f73c28695731d90df35a3e9ad9a0a57`
+(`c96446c`), branch `feat/agent-dms-v1`. This evidence is finalized in a subsequent
 documentation commit on the same branch. The handback reports that exact final
 commit. Source and evidence are committed/pushed; no merge, publication,
 deployment, visibility change or task-worktree cleanup is authorized/performed.
@@ -26,10 +26,10 @@ Final focused commands on the complete implementation:
 | Exact command | Result |
 |---|---|
 | `.venv/bin/pytest -q tests/test_storage_identity.py tests/test_sessions_status.py tests/test_messages_history.py tests/test_inbox_claims.py tests/test_workstreams.py` | **29 passed**, 8.88 s |
-| `.venv/bin/pytest -q tests/test_mcp_integration.py tests/test_stdio_bridge.py` | **9 passed**, 18.07 s |
+| `.venv/bin/pytest -q tests/test_mcp_integration.py tests/test_stdio_bridge.py` | **10 passed**, 15.01 s |
 | `.venv/bin/pytest -q tests/test_watch_receipts.py tests/test_cli_backup.py` | **15 passed**, 11.18 s |
 
-**53 focused tests passed.** No unrestricted repository-wide suite was run.
+**54 focused tests passed.** No unrestricted repository-wide suite was run.
 Earlier development failures exposed a directory result-argument collision,
 SDK 2.2 callback/client signature differences, and stateless cross-request
 cancellation. These were corrected; M01 supplies the approved cancellation
@@ -40,14 +40,14 @@ Additional focused validation:
 - `.venv/bin/pip install --require-hashes -r requirements-dev.lock` and
   `.venv/bin/pip check`: succeeded, no broken requirements. Runtime/dev lockfiles
   resolve versions/hashes without private indexes or machine-specific paths.
-- `SOURCE_DATE_EPOCH=1790980810 .venv/bin/python -m build`: wheel and source
+- `SOURCE_DATE_EPOCH=1790981172 .venv/bin/python -m build`: wheel and source
   archive built (timestamp is the implementation source commit's Unix time).
 - `.venv/bin/python scripts/validate_artifact.py`: fresh temporary venv installed
   hash-locked runtime dependencies and the wheel; dependency check, import without
   state creation, packaged SQL/protocol, MIT/third-party notices, entry point,
   CLI help/version, actual wheel init/add/list, and JSON/TOML examples all passed.
 - `docker build -t agent-dms:local .`: succeeded. Built image
-  `sha256:543f6a2faf5878c11f5b35e93771bca98c1a7e31d4be259ab60d702cfa53d209`,
+  `sha256:7999a82de5d07f87ed816512e5034d78e1513cea2b7189dd400fb804f69a3ad3`,
   configured user `10001:10001`. No persistent service/container was deployed.
 - `docker compose config --quiet`: passed; host port is loopback-bound and state
   has a persistent volume. No registry/package publication occurred.
@@ -57,7 +57,7 @@ Additional focused validation:
   virtual environments or private machine paths in authored runtime/docs/examples.
 
 Validated wheel: `dist/agent_dms-0.1.0-py3-none-any.whl`, SHA-256
-`e49ec1ea84460036b7f822b40c9168b66dd6d59270842865e69a66a87dd44eb3`.
+`7cf1f45a5a66ee1a740bbb07055428e768fb904d94ecb215f9f309800001bd7d`.
 Artifacts are local ignored outputs, not published or committed binaries.
 The source archive includes docs/examples/locked requirements and validation
 scripts; it is rebuilt after this evidence update to include the finalized text.
@@ -93,7 +93,7 @@ Native application consumption is separately unverified below.
 | A16 | 401/403 auth/Host/Origin checks, 256 KiB refusal, actual 64 concurrent requests plus retryable capacity rejection, two waits/principal, sanitized failures; MCP tests |
 | A17 | Full start/question/answer/complete/revise/complete/approve loop with exact state/round/revision and one DM/event per step; workstream and SDK-wire tests |
 | A18 | Wrong role/stale revision/blocked completion/terminal reopening reject, approval replay stable, ordinary DM kind does not change state, combined handoff bounds; workstream tests |
-| A19 | Real stdio SDK subprocess and direct HTTP peer share one daemon/database and contract; successful SDK parsing verifies protocol-only stdout |
+| A19 | Real stdio SDK subprocess and direct HTTP peer share one daemon/database and contract; successful SDK parsing verifies protocol-only stdout; injected bridge transport faults preserve isError/structured INTERNAL_ERROR/request ID and redact sentinels |
 | A20 | Empty/unchanged/all-claimed hints cause no sink/receipt, 105 pending messages counted beyond the first page, captured revision coalescing; watcher tests |
 | A21 | Missing capability no-start retry, actual fake subprocess success/nonzero/timeout, parent process killed after child spawn then restart quarantines uncertainty, exact explicit resolution; watcher tests |
 | A22 | Exact fixed argv and UUID/workspace, real DM arrival during sink preserves next revision, actual watcher stops on takeover, safe outage diagnostics; watcher tests |
@@ -104,7 +104,9 @@ Native application consumption is separately unverified below.
 Meaningful fault injection demonstrates rollback of send message/delivery/thread,
 ACK receipt/delivery updates, and workstream transition plus optional ACK/message.
 Discarded committed-response retries use the exact saved keys and preserve one
-intended effect. Injected transport/tool exceptions include sentinel credentials
+intended effect. The final stdio transport fault check also verifies that unexpected
+upstream exceptions retain a structured failure envelope rather than becoming a
+success-looking result or leaking exception details. Injected transport/tool exceptions include sentinel credentials
 and private body text; sanitized outputs/diagnostics omit them.
 
 M01 additionally verifies other-principal same-ID cancellation isolation,
