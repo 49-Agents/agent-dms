@@ -7,7 +7,17 @@ from mcp.server.lowlevel import Server
 from mcp.server.stdio import stdio_server
 
 from .client import connect, read_token
-from .mcp_server import INSTRUCTIONS, configure_safe_logging
+from .mcp_server import INSTRUCTIONS, configure_safe_logging, result_error
+from .errors import DomainError
+from .models import canonical
+
+
+async def forward_tool(upstream, params):
+    try:
+        return await upstream.call_tool(params.name, params.arguments or {})
+    except Exception:
+        envelope = result_error(DomainError("INTERNAL_ERROR", "Daemon request failed; reconcile the original operation and retry key"))
+        return types.CallToolResult(content=[types.TextContent(type="text", text=canonical(envelope))], structured_content=envelope, is_error=True)
 
 
 async def bridge(url, token_file):
@@ -22,7 +32,7 @@ async def bridge(url, token_file):
             return await forward(upstream.list_tools(params=params))
 
         async def call_tool(ctx, params):
-            return await forward(upstream.call_tool(params.name, params.arguments or {}))
+            return await forward_tool(upstream, params)
 
         async def list_prompts(ctx, params):
             return await forward(upstream.list_prompts(params=params))

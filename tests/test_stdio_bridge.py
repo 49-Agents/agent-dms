@@ -29,3 +29,16 @@ async def test_stdio_adapter_direct_http_peer(h, peers, live):
                 assert (await call(direct, "inbox_peek", {"session_id": h.sessions[a]}))["items"][0]["message_id"] == reply["message_id"]
     # SDK parsing successful stdio replies verifies stdout contained only MCP frames.
     assert h.call(b, "inbox_peek")["counts"]["pending"] == 0
+
+
+async def test_bridge_transport_fault_preserves_error_envelope():
+    import json
+    from mcp import types
+    from agent_dms.stdio_bridge import forward_tool
+    class FailedUpstream:
+        async def call_tool(self, *args):
+            raise RuntimeError("TOKEN-SENTINEL PRIVATE-MESSAGE-SENTINEL")
+    result = await forward_tool(FailedUpstream(), types.CallToolRequestParams(name="dm_send", arguments={}))
+    assert result.is_error and result.structured_content["error"]["code"] == "INTERNAL_ERROR"
+    assert result.structured_content["request_id"] and not result.structured_content["ok"]
+    assert "SENTINEL" not in json.dumps(result.model_dump())
