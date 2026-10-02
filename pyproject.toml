@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-dms"
+version = "0.1.0"
+description = "Project-local durable direct messaging for existing MCP agents"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "49Agents contributors"}]
+dependencies = ["mcp==2.2.0", "httpx==0.28.1", "uvicorn==0.54.0"]
+
+[project.optional-dependencies]
+test = ["pytest==8.4.2", "pytest-asyncio==1.2.0"]
+
+[project.scripts]
+agent-dms = "agent_dms.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agent_dms = ["migrations/*.sql", "protocol.md"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
