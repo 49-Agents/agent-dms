@@ -50,7 +50,5 @@ exact and principal/project bound, with application generation recorded. Unknown
 or foreign cancellations cannot mutate inbox state. A pre-registration race may
 miss cancellation, but the wait remains read-only and time-bounded.
 
-Report security issues privately to the repository owners through the existing
-private repository reporting channel. Do not include credentials or private
-message transcripts in public issues; the repository remains private during
-development. No public disclosure/publishing flow is part of v1.
+Report vulnerabilities through the repository-root [security policy](../SECURITY.md).
+Never include credentials or private message transcripts in public issues.

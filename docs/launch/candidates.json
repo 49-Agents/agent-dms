@@ -1,0 +1,674 @@
+{
+  "project": "agent-dms open-source launch — draft copy",
+  "elements": [
+    {
+      "key": "headline",
+      "label": "Headlines",
+      "kind": "text",
+      "target_variants": 8,
+      "target_options": 4
+    },
+    {
+      "key": "post",
+      "label": "Short launch posts",
+      "kind": "text",
+      "target_variants": 8,
+      "target_options": 4,
+      "board_size": [
+        440,
+        300
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "headline-01-A",
+      "element": "headline",
+      "variant": "headline-01",
+      "option": "A",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Initial wording",
+      "text": "A shared inbox for your coding agents"
+    },
+    {
+      "id": "headline-01-B",
+      "element": "headline",
+      "variant": "headline-01",
+      "option": "B",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative lead",
+      "text": "One project inbox for your coding agents"
+    },
+    {
+      "id": "headline-01-C",
+      "element": "headline",
+      "variant": "headline-01",
+      "option": "C",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative emphasis",
+      "text": "Your coding agents, one shared inbox"
+    },
+    {
+      "id": "headline-01-D",
+      "element": "headline",
+      "variant": "headline-01",
+      "option": "D",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative phrasing",
+      "text": "Give your coding agents a shared inbox"
+    },
+    {
+      "id": "headline-02-A",
+      "element": "headline",
+      "variant": "headline-02",
+      "option": "A",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Initial wording",
+      "text": "Let your agents find each other"
+    },
+    {
+      "id": "headline-02-B",
+      "element": "headline",
+      "variant": "headline-02",
+      "option": "B",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative lead",
+      "text": "See which agents are in your project"
+    },
+    {
+      "id": "headline-02-C",
+      "element": "headline",
+      "variant": "headline-02",
+      "option": "C",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative emphasis",
+      "text": "Help your agents discover their peers"
+    },
+    {
+      "id": "headline-02-D",
+      "element": "headline",
+      "variant": "headline-02",
+      "option": "D",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative phrasing",
+      "text": "A directory for the agents on your project"
+    },
+    {
+      "id": "headline-03-A",
+      "element": "headline",
+      "variant": "headline-03",
+      "option": "A",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Initial wording",
+      "text": "Let each agent say what it is working on"
+    },
+    {
+      "id": "headline-03-B",
+      "element": "headline",
+      "variant": "headline-03",
+      "option": "B",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative lead",
+      "text": "See what your other agents are working on"
+    },
+    {
+      "id": "headline-03-C",
+      "element": "headline",
+      "variant": "headline-03",
+      "option": "C",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative emphasis",
+      "text": "Current-work status for every project agent"
+    },
+    {
+      "id": "headline-03-D",
+      "element": "headline",
+      "variant": "headline-03",
+      "option": "D",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative phrasing",
+      "text": "Keep agent status short and visible"
+    },
+    {
+      "id": "headline-04-A",
+      "element": "headline",
+      "variant": "headline-04",
+      "option": "A",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Initial wording",
+      "text": "Agent messages that wait until handled"
+    },
+    {
+      "id": "headline-04-B",
+      "element": "headline",
+      "variant": "headline-04",
+      "option": "B",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative lead",
+      "text": "Keep agent DMs until they are acknowledged"
+    },
+    {
+      "id": "headline-04-C",
+      "element": "headline",
+      "variant": "headline-04",
+      "option": "C",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative emphasis",
+      "text": "A durable mailbox between agents"
+    },
+    {
+      "id": "headline-04-D",
+      "element": "headline",
+      "variant": "headline-04",
+      "option": "D",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative phrasing",
+      "text": "Read, handle, then acknowledge agent DMs"
+    },
+    {
+      "id": "headline-05-A",
+      "element": "headline",
+      "variant": "headline-05",
+      "option": "A",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Initial wording",
+      "text": "Connect the agents you already run"
+    },
+    {
+      "id": "headline-05-B",
+      "element": "headline",
+      "variant": "headline-05",
+      "option": "B",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative lead",
+      "text": "Add messaging to your existing agents"
+    },
+    {
+      "id": "headline-05-C",
+      "element": "headline",
+      "variant": "headline-05",
+      "option": "C",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative emphasis",
+      "text": "Give existing agents a way to coordinate"
+    },
+    {
+      "id": "headline-05-D",
+      "element": "headline",
+      "variant": "headline-05",
+      "option": "D",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative phrasing",
+      "text": "Keep your agents. Add a shared mailbox."
+    },
+    {
+      "id": "headline-06-A",
+      "element": "headline",
+      "variant": "headline-06",
+      "option": "A",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Initial wording",
+      "text": "A mailbox for agent handoffs and reviews"
+    },
+    {
+      "id": "headline-06-B",
+      "element": "headline",
+      "variant": "headline-06",
+      "option": "B",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative lead",
+      "text": "Let agents ask questions and send reviews"
+    },
+    {
+      "id": "headline-06-C",
+      "element": "headline",
+      "variant": "headline-06",
+      "option": "C",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative emphasis",
+      "text": "Agent handoffs with a reply path"
+    },
+    {
+      "id": "headline-06-D",
+      "element": "headline",
+      "variant": "headline-06",
+      "option": "D",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative phrasing",
+      "text": "Give agent review loops a shared inbox"
+    },
+    {
+      "id": "headline-07-A",
+      "element": "headline",
+      "variant": "headline-07",
+      "option": "A",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Initial wording",
+      "text": "Agent messaging inside your project"
+    },
+    {
+      "id": "headline-07-B",
+      "element": "headline",
+      "variant": "headline-07",
+      "option": "B",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative lead",
+      "text": "A local mailbox for project agents"
+    },
+    {
+      "id": "headline-07-C",
+      "element": "headline",
+      "variant": "headline-07",
+      "option": "C",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative emphasis",
+      "text": "Keep your agent mailbox on your machine"
+    },
+    {
+      "id": "headline-07-D",
+      "element": "headline",
+      "variant": "headline-07",
+      "option": "D",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative phrasing",
+      "text": "One local server for agent DMs"
+    },
+    {
+      "id": "headline-08-A",
+      "element": "headline",
+      "variant": "headline-08",
+      "option": "A",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Initial wording",
+      "text": "Try a two-agent DM exchange locally"
+    },
+    {
+      "id": "headline-08-B",
+      "element": "headline",
+      "variant": "headline-08",
+      "option": "B",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative lead",
+      "text": "Send a DM between two MCP clients"
+    },
+    {
+      "id": "headline-08-C",
+      "element": "headline",
+      "variant": "headline-08",
+      "option": "C",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative emphasis",
+      "text": "Run a local agent-mailbox demo"
+    },
+    {
+      "id": "headline-08-D",
+      "element": "headline",
+      "variant": "headline-08",
+      "option": "D",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative phrasing",
+      "text": "Try agent discovery, status and DMs"
+    },
+    {
+      "id": "post-01-A",
+      "element": "post",
+      "variant": "post-01",
+      "option": "A",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Initial wording",
+      "text": "agent-dms gives existing agents a shared project inbox: discover peers, see their current work, and exchange durable DMs. MIT-licensed. Try the local two-client demo."
+    },
+    {
+      "id": "post-01-B",
+      "element": "post",
+      "variant": "post-01",
+      "option": "B",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative lead",
+      "text": "agent-dms puts peer discovery, current-work status and durable DMs in one project mailbox. For agents you already run. MIT-licensed; local demo in the README."
+    },
+    {
+      "id": "post-01-C",
+      "element": "post",
+      "variant": "post-01",
+      "option": "C",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative emphasis",
+      "text": "A shared inbox for the agents in your project. agent-dms adds peer discovery, short work status and durable DMs through MCP. Try the local demo."
+    },
+    {
+      "id": "post-01-D",
+      "element": "post",
+      "variant": "post-01",
+      "option": "D",
+      "rev": 1,
+      "concept": "Shared inbox",
+      "change": "Alternative phrasing",
+      "text": "Working with more than one coding agent? agent-dms gives them a shared project mailbox with discovery, status and durable DMs. Start with the two-client demo."
+    },
+    {
+      "id": "post-02-A",
+      "element": "post",
+      "variant": "post-02",
+      "option": "A",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Initial wording",
+      "text": "Which agents are connected to this project? agent-dms gives MCP clients a peer directory and a way to DM each other. Run the local demo and inspect the directory."
+    },
+    {
+      "id": "post-02-B",
+      "element": "post",
+      "variant": "post-02",
+      "option": "B",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative lead",
+      "text": "Let one project agent find another. agent-dms exposes a peer directory, short work status and durable DMs through one local MCP server. Try the demo."
+    },
+    {
+      "id": "post-02-C",
+      "element": "post",
+      "variant": "post-02",
+      "option": "C",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative emphasis",
+      "text": "agent-dms lets connected agents discover exact peers before sending a message. One project, one local mailbox. Try discovery and a DM exchange in the README."
+    },
+    {
+      "id": "post-02-D",
+      "element": "post",
+      "variant": "post-02",
+      "option": "D",
+      "rev": 1,
+      "concept": "Peer discovery",
+      "change": "Alternative phrasing",
+      "text": "Give your agents a shared directory and a reply path. agent-dms connects existing MCP clients to a local mailbox. The README has a two-client demo."
+    },
+    {
+      "id": "post-03-A",
+      "element": "post",
+      "variant": "post-03",
+      "option": "A",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Initial wording",
+      "text": "What is the other agent working on? agent-dms requires a 1–30-word status alongside peer discovery and DMs. Status describes reported work. Try the local demo."
+    },
+    {
+      "id": "post-03-B",
+      "element": "post",
+      "variant": "post-03",
+      "option": "B",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative lead",
+      "text": "agent-dms gives each connected agent a short current-work status. Peers can read it, discover each other and send durable DMs. Try the project-local demo."
+    },
+    {
+      "id": "post-03-C",
+      "element": "post",
+      "variant": "post-03",
+      "option": "C",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative emphasis",
+      "text": "A small status update can give a peer context before a handoff. agent-dms requires 1–30 words of current work and provides durable DMs. Try the demo."
+    },
+    {
+      "id": "post-03-D",
+      "element": "post",
+      "variant": "post-03",
+      "option": "D",
+      "rev": 1,
+      "concept": "Current work",
+      "change": "Alternative phrasing",
+      "text": "Short status, visible peers, direct messages. agent-dms adds a shared local MCP mailbox to existing agent workflows. Try a two-client exchange."
+    },
+    {
+      "id": "post-04-A",
+      "element": "post",
+      "variant": "post-04",
+      "option": "A",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Initial wording",
+      "text": "Reading a message should not mean the work is done. agent-dms keeps DMs pending until explicitly acknowledged. Try the local send, claim, reply and ACK demo."
+    },
+    {
+      "id": "post-04-B",
+      "element": "post",
+      "variant": "post-04",
+      "option": "B",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative lead",
+      "text": "agent-dms separates reading from handling: a DM stays pending until an agent explicitly acknowledges it. One local MCP mailbox. Try the two-client demo."
+    },
+    {
+      "id": "post-04-C",
+      "element": "post",
+      "variant": "post-04",
+      "option": "C",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative emphasis",
+      "text": "Send, claim, handle, acknowledge. agent-dms gives existing agents durable project DMs with explicit inbox handling. Try that flow locally from the README."
+    },
+    {
+      "id": "post-04-D",
+      "element": "post",
+      "variant": "post-04",
+      "option": "D",
+      "rev": 1,
+      "concept": "Durable handling",
+      "change": "Alternative phrasing",
+      "text": "A reply and a handled message are separate events in agent-dms. Choose explicit acknowledgement when the work is done. Try the durable-DM demo."
+    },
+    {
+      "id": "post-05-A",
+      "element": "post",
+      "variant": "post-05",
+      "option": "A",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Initial wording",
+      "text": "Already running multiple agents? agent-dms adds a shared MCP mailbox for discovery, status and DMs. Your clients still run the models. Try the local demo."
+    },
+    {
+      "id": "post-05-B",
+      "element": "post",
+      "variant": "post-05",
+      "option": "B",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative lead",
+      "text": "Keep the agent clients you use. agent-dms provides their shared project directory, status and mailbox through MCP. SDK transports tested; native checks documented."
+    },
+    {
+      "id": "post-05-C",
+      "element": "post",
+      "variant": "post-05",
+      "option": "C",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative emphasis",
+      "text": "agent-dms connects existing agents through one local MCP daemon. It supplies messaging; your chosen clients run the models. Start with the two-client demo."
+    },
+    {
+      "id": "post-05-D",
+      "element": "post",
+      "variant": "post-05",
+      "option": "D",
+      "rev": 1,
+      "concept": "Existing workflow",
+      "change": "Alternative phrasing",
+      "text": "Add a mailbox to your current agent workflow. agent-dms supports MCP HTTP and stdio clients, peer discovery and durable DMs. Try it locally."
+    },
+    {
+      "id": "post-06-A",
+      "element": "post",
+      "variant": "post-06",
+      "option": "A",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Initial wording",
+      "text": "Handoff, question, completion, review. agent-dms supports these conversations between a Manager and Worker, alongside ordinary DMs. Try the mailbox demo first."
+    },
+    {
+      "id": "post-06-B",
+      "element": "post",
+      "variant": "post-06",
+      "option": "B",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative lead",
+      "text": "agent-dms gives agent review loops a durable reply path: handoffs, questions, completion reports and revisions. One local MCP mailbox. See the demo and protocol."
+    },
+    {
+      "id": "post-06-C",
+      "element": "post",
+      "variant": "post-06",
+      "option": "C",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative emphasis",
+      "text": "An agent handoff can include a question and a review reply. agent-dms models that conversation while keeping messages durable. Try the local mailbox demo."
+    },
+    {
+      "id": "post-06-D",
+      "element": "post",
+      "variant": "post-06",
+      "option": "D",
+      "rev": 1,
+      "concept": "Review conversations",
+      "change": "Alternative phrasing",
+      "text": "Use ordinary DMs or a Manager/Worker review conversation. agent-dms supports both in one project-local MCP server. Start with the two-client demo."
+    },
+    {
+      "id": "post-07-A",
+      "element": "post",
+      "variant": "post-07",
+      "option": "A",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Initial wording",
+      "text": "One project, one local MCP server, one SQLite mailbox. agent-dms gives existing agents discovery, current-work status and durable DMs. MIT-licensed; try the demo."
+    },
+    {
+      "id": "post-07-B",
+      "element": "post",
+      "variant": "post-07",
+      "option": "B",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative lead",
+      "text": "Run the agent mailbox on your own machine. agent-dms connects existing MCP clients to project-local discovery, status and DMs. Linux demo in the README."
+    },
+    {
+      "id": "post-07-C",
+      "element": "post",
+      "variant": "post-07",
+      "option": "C",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative emphasis",
+      "text": "agent-dms keeps its mailbox in local project state. Connect existing agents over HTTP or a stdio bridge, then exchange DMs. Try the temporary demo."
+    },
+    {
+      "id": "post-07-D",
+      "element": "post",
+      "variant": "post-07",
+      "option": "D",
+      "rev": 1,
+      "concept": "Local ownership",
+      "change": "Alternative phrasing",
+      "text": "A small local service for agent coordination: peer discovery, short work status and durable DMs. agent-dms is MIT-licensed. Start with the Linux quickstart."
+    },
+    {
+      "id": "post-08-A",
+      "element": "post",
+      "variant": "post-08",
+      "option": "A",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Initial wording",
+      "text": "Try a real DM exchange between two MCP clients, without a provider account. The agent-dms demo creates a temporary mailbox and removes it when finished."
+    },
+    {
+      "id": "post-08-B",
+      "element": "post",
+      "variant": "post-08",
+      "option": "B",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative lead",
+      "text": "The agent-dms demo provisions two temporary identities, exchanges a DM and reply, and explicitly ACKs both. Run it locally; no model invocation required."
+    },
+    {
+      "id": "post-08-C",
+      "element": "post",
+      "variant": "post-08",
+      "option": "C",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative emphasis",
+      "text": "Want to inspect agent-dms before connecting models? Run the local SDK demo: discover peers, read status, send a DM and acknowledge the reply."
+    },
+    {
+      "id": "post-08-D",
+      "element": "post",
+      "variant": "post-08",
+      "option": "D",
+      "rev": 1,
+      "concept": "Try it",
+      "change": "Alternative phrasing",
+      "text": "Run agent-dms locally and watch two SDK clients exchange a DM. Temporary state, explicit acknowledgements, no provider account needed for the demo."
+    }
+  ],
+  "combinations": [
+    {
+      "label": "Suggested starting pair, not owner-approved",
+      "ids": [
+        "headline-01-A",
+        "post-01-A"
+      ]
+    }
+  ]
+}

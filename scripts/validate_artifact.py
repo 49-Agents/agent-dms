@@ -9,7 +9,10 @@ import zipfile
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-wheel = next((root / "dist").glob("agent_dms-0.1.0-*.whl"))
+version = tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
+wheels = list((root / "dist").glob(f"agent_dms-{version}-*.whl"))
+assert len(wheels) == 1, "Build exactly one wheel for the current version"
+wheel = wheels[0]
 with zipfile.ZipFile(wheel) as artifact:
     names = artifact.namelist()
     assert any(name.endswith("/licenses/LICENSE") for name in names)
@@ -31,7 +34,7 @@ with tempfile.TemporaryDirectory(prefix="agent-dms-artifact-") as temporary:
     subprocess.run([str(python), "-m", "pip", "check"], check=True)
     result = subprocess.run([str(venv / "bin/agent-dms"), "--help"], check=True, text=True, capture_output=True)
     assert all(command in result.stdout for command in ("init", "serve", "agent", "watch", "backup", "restore", "stdio"))
-    assert subprocess.check_output([str(venv / "bin/agent-dms"), "--version"], text=True).strip() == "agent-dms 0.1.0"
+    assert subprocess.check_output([str(venv / "bin/agent-dms"), "--version"], text=True).strip() == f"agent-dms {version}"
     subprocess.run([str(python), "-c", "import agent_dms; from importlib.resources import files; assert files('agent_dms').joinpath('migrations/001_initial.sql').is_file(); assert files('agent_dms').joinpath('protocol.md').is_file()"], check=True, cwd=temporary)
     assert not (temporary / ".agent-dms").exists()
     console = str(venv / "bin/agent-dms")
@@ -40,4 +43,5 @@ with tempfile.TemporaryDirectory(prefix="agent-dms-artifact-") as temporary:
     assert initialized["project_id"] and set(added) == {"agent_id", "credential_file"}
     roster = json.loads(subprocess.check_output([console, "agent", "--data-dir", str(temporary / ".agent-dms"), "list"], text=True))
     assert roster[0]["id"] == added["agent_id"]
-print("A24: fresh wheel install, hash-locked dependencies, import/resources, entry point, CLI help, JSON/TOML examples: passed")
+    subprocess.run([str(python), str(root / "examples/demo.py")], check=True, cwd=temporary, timeout=90)
+print("Fresh wheel, locked dependencies, resources, CLI, config examples and two-client DM/ACK demo: passed")

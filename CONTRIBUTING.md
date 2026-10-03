@@ -1,31 +1,49 @@
 # Contributing
 
-Work only in an isolated dedicated branch/worktree, preserve others' changes,
-and read AGENTS.md plus the accepted implementation plan and amendments. Do not
-develop on the default branch or shared primary checkout. Commit scoped code,
-focused checks and evidence; push before review. Review is not merge/release
-permission. Never auto-merge, deploy, publish packages or change visibility.
+Start with a reproducible bug or a concrete workflow that is difficult today.
+For protocol, identity, acknowledgement or lifecycle changes, discuss the design
+in an issue before implementation. See [SUPPORT.md](SUPPORT.md); report security
+issues through [SECURITY.md](SECURITY.md).
+
+## Development
+
+Use a fork or a permitted branch in this repository. Work in a dedicated Git
+worktree and preserve others' changes. From that worktree:
 
 ```sh
 python3 -m venv .venv
-.venv/bin/pip install --require-hashes -r requirements-dev.lock
-.venv/bin/pip install --no-deps -e .
-.venv/bin/pytest -q tests/test_storage_identity.py tests/test_sessions_status.py
-.venv/bin/pytest -q tests/test_messages_history.py tests/test_inbox_claims.py
-.venv/bin/pytest -q tests/test_workstreams.py tests/test_mcp_integration.py
-.venv/bin/pytest -q tests/test_stdio_bridge.py tests/test_watch_receipts.py
-.venv/bin/pytest -q tests/test_cli_backup.py
-.venv/bin/python -m build
+.venv/bin/python -m pip install --require-hashes -r requirements-dev.lock
+.venv/bin/python -m pip install --no-build-isolation --no-deps -e .
 ```
 
-Select only files/cases covering changed behavior; these are the named acceptance
-feature groups, not authorization for unrestricted all-suite testing. Tests use
-temporary state, clocks, ports and fake queue executables, never operational DBs,
-real native threads, provider API calls or global client settings. CI explicitly
-names these files on Python 3.11/3.12. Do not invent tests that merely mirror code.
+Activate the environment and select focused checks affected by your change:
 
-Runtime state, tokens, backups, receipts, transcripts and virtual environments
-must stay outside commits. Original code is MIT; retain notices for permitted
-adaptations, and do not copy private Qorqut or competitor implementations.
-Record evidence in IMPLEMENTATION-RESULTS, never retroactively change the frozen
-plan. Architecture/scope/acceptance decisions belong to Manager; ask blockers.
+| Area | Check |
+| --- | --- |
+| Identity and state | `pytest -q tests/test_storage_identity.py tests/test_sessions_status.py` |
+| Durable DMs and acknowledgements | `pytest -q tests/test_messages_history.py tests/test_inbox_claims.py` |
+| Workstreams and MCP | `pytest -q tests/test_workstreams.py tests/test_mcp_integration.py` |
+| Adapters and wakeups | `pytest -q tests/test_stdio_bridge.py tests/test_watch_receipts.py` |
+| Operator lifecycle | `pytest -q tests/test_cli_backup.py` |
+| Distribution and onboarding | `python scripts/validate_release.py`, `python -m build --no-isolation`, `python scripts/validate_artifact.py` |
+
+Tests must use temporary state, isolated ports and fake queue executables. They
+must not invoke paid models, touch global client settings or depend on a live
+mailbox. CI covers Linux on Python 3.11 and 3.12.
+
+## Pull requests
+
+Explain the user-visible problem, resulting behavior and focused validation.
+Include failure/retry/restart cases for durability changes. Keep the protocol,
+packaged protocol resource and operator docs consistent. Add a changelog entry
+for user-visible changes. Do not revise the frozen initial implementation plan;
+use a separate design amendment when necessary.
+
+Contributions are under the repository's MIT license. Only submit code you have
+the right to contribute and preserve applicable third-party notices. Keep secrets,
+runtime state and private transcripts out of commits and issue attachments.
+
+Be considerate, respond to technical disagreement with evidence, and avoid
+harassment or personal attacks. Maintainers may remove abusive content and
+restrict participation. Support is best effort; no response-time promise is
+made. Maintainer review does not by itself authorize a merge or release.

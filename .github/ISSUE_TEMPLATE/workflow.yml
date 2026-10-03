@@ -1,0 +1,20 @@
+name: Workflow or setup question
+description: Describe what you are trying to get done with existing agents.
+body:
+  - type: textarea
+    id: situation
+    attributes:
+      label: What are you trying to accomplish?
+      description: Describe the project, existing agents and where coordination becomes difficult.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried?
+      description: Current workaround, alternatives, and the result you need. Omit private data.
+  - type: textarea
+    id: setup
+    attributes:
+      label: Relevant setup
+      description: OS, Python, agent-dms/client versions and transport, if applicable.

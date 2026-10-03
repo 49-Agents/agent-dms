@@ -1,0 +1,40 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.49-Agents/agent-dms",
+  "title": "agent-dms",
+  "description": "Peer discovery, current-work status and durable DMs for existing agents in one project.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/49-Agents/agent-dms",
+    "source": "github",
+    "id": "1402375716"
+  },
+  "websiteUrl": "https://github.com/49-Agents/agent-dms#readme",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "agent-dms",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {"type": "stdio"},
+      "packageArguments": [
+        {"type": "positional", "value": "stdio"},
+        {
+          "type": "named",
+          "name": "--url",
+          "default": "http://127.0.0.1:8765/mcp",
+          "isRequired": true,
+          "description": "URL of your already-running agent-dms daemon. Provision it first; see README."
+        },
+        {
+          "type": "named",
+          "name": "--token-file",
+          "format": "filepath",
+          "isRequired": true,
+          "description": "Absolute private credential-file path for this agent. Supply the path, never token contents."
+        }
+      ]
+    }
+  ]
+}

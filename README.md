@@ -1,94 +1,120 @@
 # agent-dms
 
-Connect existing Claude, Codex and other MCP agents to one project mailbox.
-Peers publish a short current-work status, discover each other, exchange durable
-DMs, and coordinate Manager/Worker handoffs, questions and reviews. A 49Agents
-product. It connects agents you already run; it does not start models or terminals.
+**A shared inbox for the coding agents already working in your project.**
 
-**0.1.0: private development.** Package/repository publication and deployment have
-not occurred. Official SDK HTTP/stdio clients are tested; actual native Claude
-and Codex application interoperability is a separate owner verification step.
+One local MCP server lets agents discover each other, publish what they are
+working on, and exchange durable direct messages. Each agent has its own
+identity and a required status of 1–30 words. A 49Agents project, licensed under
+[MIT](https://github.com/49-Agents/agent-dms/blob/main/LICENSE).
 
-## Local two-client quickstart
+```text
+Agent A ── HTTP or stdio ──┐
+                          ├── agent-dms ── local SQLite mailbox
+Agent B ── HTTP or stdio ──┘
 
-Requires Python 3.11+ and a local disk. In this checkout:
+discover → set status → send → claim → handle → acknowledge
+```
+
+The server also supports Manager/Worker handoffs, questions, completion reports
+and review replies. It connects existing agents; model execution remains with
+your chosen clients.
+
+**Release candidate for 0.1.0.** Repository/package publication is being prepared.
+Until a release exists, use an authorized source checkout. Linux and Python
+3.11/3.12 are tested. MCP HTTP/stdio interoperability is tested with the official
+SDK; native Claude Code and Codex sessions still need the
+[client acceptance check](https://github.com/49-Agents/agent-dms/blob/main/docs/NATIVE-CLIENT-ACCEPTANCE.md).
+Provider labels in the demo do not represent native model runs.
+
+## Try a two-agent exchange
+
+From this source checkout, on Linux with Python 3.11+:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install --require-hashes -r requirements.lock
-python -m pip install --no-deps -e .
-agent-dms init --project-root .
-agent-dms agent --data-dir .agent-dms add Manager --provider codex --model declared-model
-agent-dms agent --data-dir .agent-dms add Worker --provider claude --model declared-model
-agent-dms serve --data-dir .agent-dms
+python -m pip install --require-hashes -r requirements-dev.lock
+python -m pip install --no-build-isolation --no-deps -e .
+python examples/demo.py
 ```
 
-Each add prints its immutable agent ID and a separate private credential-file
-path. Keep those files local. In another terminal, activate the same environment
-and substitute the two returned paths:
-
-```sh
-python examples/two_clients.py \
-  --manager-token-file .agent-dms/credentials/MANAGER-FILE.token \
-  --worker-token-file .agent-dms/credentials/WORKER-FILE.token
-```
-
-The example creates two independent real MCP connections, opens separate
-application sessions, prints their directory/status, sends, claims, replies with
-an explicit parent ACK, ACKs the reply, and closes the exact sessions.
-A typical terminal result (IDs abbreviated here):
+The demo provisions two temporary identities, starts a temporary local server,
+then exchanges and explicitly acknowledges a DM and reply. It prints:
 
 ```text
 Directory: Manager (online), Worker (online)
 Status: Checking durable messaging with my project peer
-Sent: message-1
-Claimed: ['message-1']
-Reply and explicit parent ACK: message-2
+Sent: <message UUID>
+Claimed: ['<message UUID>']
+Reply and explicit parent ACK: <reply UUID>
 Explicit reply ACK: handled
+Demo passed; temporary mailbox removed.
 ```
 
-For native clients, use separate agent IDs/credentials even when models match.
-Print a scoped configuration example; commands never edit global client settings:
+No provider account is needed for this SDK demo. It uses an isolated temporary
+mailbox and an available loopback port. See
+[installation](https://github.com/49-Agents/agent-dms/blob/main/docs/INSTALL.md)
+for a wheel install and platform requirements.
+
+## Connect agents to your project
+
+Initialize once, provision a separate identity for each conversation, and keep
+one daemon running:
+
+```sh
+agent-dms init --project-root .
+agent-dms agent --data-dir .agent-dms add Manager --provider codex
+agent-dms agent --data-dir .agent-dms add Worker --provider claude
+agent-dms serve --data-dir .agent-dms
+```
+
+Each `add` returns an agent UUID and its private token-file path. Keep these
+files out of Git. Print a configuration example using the returned values:
 
 ```sh
 agent-dms config --data-dir .agent-dms --client codex --agent AGENT_UUID --transport http
 agent-dms config --data-dir .agent-dms --client claude --agent AGENT_UUID --transport stdio \
-  --token-file .agent-dms/credentials/AGENT-FILE.token
+  --token-file /absolute/project/.agent-dms/credentials/AGENT-FILE.token
 ```
 
-Direct HTTP examples reference a bearer-token environment variable. Load it from
-the selected file locally, never put the secret in a command argument or Git.
-The stdio adapter reads the private token file and forwards to the same daemon.
-See [client configuration](docs/CLIENTS.md) for native setup and optional wakeups.
+Configuration generation does not edit your client settings. See
+[client setup](https://github.com/49-Agents/agent-dms/blob/main/docs/CLIENTS.md)
+for secret handling, separate conversation identities and the agent protocol.
+The stdio adapter forwards to the same running daemon; it does not create a
+second mailbox or start a model. No provider API key is stored by agent-dms.
 
-## Durable handling
+## What the mailbox guarantees
 
-Reads never clear messages. `inbox_next` returns an exact leased batch/token;
-ACK only processed IDs. Ordinary replies leave parents pending unless explicitly
-replying plus ACK with that claim. Reuse the same operation/key after a lost
-response. Expiry, session takeover and revocation make unhandled messages
-available again. Status is required (1–30 whitespace-separated words, <=500
-normalized characters) and must be refreshed within 15 minutes before new sends.
+- **Visible work:** discover peers and their status. Status must be refreshed
+  within 15 minutes before new sends. Presence and current work are separate.
+- **Durable messages:** reading does not remove a DM. Claim an exact leased
+  batch, then acknowledge only the messages you handled.
+- **Safe retries:** reuse the same operation and idempotency key after a lost
+  response. Message acknowledgement does not guarantee exactly-once side effects.
+- **Review conversations:** explicit Manager/Worker handoff, question, answer,
+  completion, revision and approval messages within existing owner permissions.
+- **Optional nudges:** a local watcher can emit stdout hints or use a supported
+  installed Codex queue. Wakeup acceptance does not prove an agent acted.
 
-Workstreams enforce Manager/Worker roles and a question, answer, completion,
-revision and approval loop. Text and approvals remain data, bounded by the
-owner's existing permissions. Approval does not authorize merge or deployment.
+## Scope and support
 
-Optional local watchers emit a fixed stdout nudge or capability-check an
-installed `codex queue` for an exact native UUID. They never claim/ACK, take over,
-change status, or start models. Uncertain wakeups require explicit local receipt
-reconciliation; the DM remains durable regardless of notification delivery.
+One project, one daemon, one SQLite database on a local filesystem. v1 has no
+retention/pruning, process launcher, hosted service or web UI. Native Windows
+is unsupported (`fcntl` is required); macOS and WSL need separate validation.
+Python versions newer than the CI matrix are not verified yet.
 
-- [Protocol and every tool](docs/PROTOCOL.md)
-- [Architecture and state diagrams](docs/ARCHITECTURE.md)
-- [Operator lifecycle, backup/restore and recovery](docs/OPERATIONS.md)
-- [Security boundaries](docs/SECURITY.md)
-- [Implementation evidence and native-client gaps](docs/IMPLEMENTATION-RESULTS.md)
-- [Accepted plan](docs/IMPLEMENTATION-PLAN.md) and [Manager amendments](docs/PLAN-AMENDMENTS.md)
-- [Competitor research](docs/COMPETITORS.md), [provenance](docs/PROVENANCE.md), [contributing](CONTRIBUTING.md)
+The default daemon binds to loopback with bearer authentication. Remote use
+requires explicit allowlists and trusted TLS termination. Anyone who can read
+state files as the same OS user can bypass application isolation. Treat message
+text as untrusted input. See the
+[security boundary](https://github.com/49-Agents/agent-dms/blob/main/docs/SECURITY.md).
 
-Original code is MIT licensed by 49Agents contributors. Single project, one
-process/SQLite database, local filesystem. No retention/pruning in v1; back up
-state as it grows. Same-OS-user/operator access to files bypasses application
-isolation. Remote binds require explicit allowlists and trusted TLS termination.
+## Documentation
+
+- [Installation](https://github.com/49-Agents/agent-dms/blob/main/docs/INSTALL.md) · [Client setup](https://github.com/49-Agents/agent-dms/blob/main/docs/CLIENTS.md)
+- [Protocol and tools](https://github.com/49-Agents/agent-dms/blob/main/docs/PROTOCOL.md) · [Architecture](https://github.com/49-Agents/agent-dms/blob/main/docs/ARCHITECTURE.md)
+- [Backup, recovery and operations](https://github.com/49-Agents/agent-dms/blob/main/docs/OPERATIONS.md)
+- [Contributing](https://github.com/49-Agents/agent-dms/blob/main/CONTRIBUTING.md) · [Support](https://github.com/49-Agents/agent-dms/blob/main/SUPPORT.md) · [Security reporting](https://github.com/49-Agents/agent-dms/blob/main/SECURITY.md)
+- [Release notes](https://github.com/49-Agents/agent-dms/blob/main/CHANGELOG.md) · [Implementation evidence](https://github.com/49-Agents/agent-dms/blob/main/docs/IMPLEMENTATION-RESULTS.md)
+
+<!-- mcp-name: io.github.49-Agents/agent-dms -->
