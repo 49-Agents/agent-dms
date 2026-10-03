@@ -1,8 +1,8 @@
 # Installation
 
-The first release is being prepared. PyPI installation below becomes usable only
-after the package is published and its owner/version have been verified. The
-source-checkout route works now for authorized repository readers.
+PyPI installation below becomes usable only after the package is published and
+its owner/version have been verified. Check GitHub Releases for availability.
+The source-checkout route works for authorized repository readers before that.
 
 ## Requirements
 

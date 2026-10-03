@@ -22,7 +22,7 @@ only the initial README at the start of this preparation.
 | Gate | Current state | Evidence/action needed |
 | --- | --- | --- |
 | v1 runtime review | Passed | Accepted d75282e; original CI: 81 checks per Python 3.11/3.12 interpreter. |
-| Candidate packaging/demo | Prepared for focused verification | Final results recorded in launch evidence after checks. |
+| Candidate packaging/demo | Passed locally | Fresh wheel install and real two-client DM/ACK demo; 14 focused transport/CLI tests. See [verification](launch/VERIFICATION.md). |
 | Linux Python 3.11/3.12 | Supported test baseline | Keep exact candidate CI green. |
 | Native Claude↔Codex | Unverified | Run the acceptance procedure or keep an explicit SDK-only compatibility qualification. |
 | Native wakeup consumption | Unverified | Separate optional native-client check; never advertise delivery as model handling. |
@@ -33,7 +33,7 @@ only the initial README at the start of this preparation.
 | Publisher accounts/environments | Pending | PyPI/TestPyPI accounts, OIDC bindings, review protections and enable variable. |
 | Vulnerability reporting | Policy prepared | Enable and verify the private GitHub reporting route before public launch. |
 | Public repository / release | Pending authorization | Public history implications reviewed; exact main/tag/artifact hashes bound to approval. |
-| MCP Registry | Manifest prepared | Validate against official schema; org Owner authentication and real PyPI package still required. |
+| MCP Registry | Schema validation passed | Official 2025-12-11 schema; org Owner authentication and real PyPI package still required. |
 | Marketing posts | Drafts only | Destination live, exact copy/channel chosen and posting authorized separately. |
 | Customer demand | Hypothesis | Observe independent installation and a useful exchange on a real project. Stars do not establish demand. |
 

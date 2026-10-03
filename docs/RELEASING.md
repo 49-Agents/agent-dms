@@ -18,9 +18,9 @@ needed to release this standalone library/CLI.
 - Review all refs/history, author metadata, issue/PR text and attached logs before
   visibility change. Deleting a current file does not remove old Git history.
 - Resolve native-client acceptance or preserve the explicit SDK-only limitation.
-  Replace README's preparation paragraph and the changelog's unreleased label
-  with the actual release state in the reviewed release commit; never imply a
-  PyPI package exists before it does.
+  Check README and changelog claims against the exact evidence; record the
+  publication date on the GitHub release. Never imply a PyPI package exists
+  before it does.
 
 Version 0.1.0 is the initial experimental version, not an API-stability promise.
 A GitHub prerelease flag does not make a `0.1.0` PyPI version a PEP 440 prerelease.
@@ -67,7 +67,7 @@ For the first release, add a **pending trusted publisher** on PyPI:
 
 Repeat separately on TestPyPI with environment `testpypi` and its separate
 account. Both indexes are public. No long-lived API token is required: the
-publishing job uses GitHub OIDC, and only that job has `id-token: write`.
+two publishing jobs use GitHub OIDC, and only those jobs have `id-token: write`.
 
 ## 3. Build and inspect without publishing
 
@@ -90,9 +90,16 @@ Keep hashes, exact source SHA, test/CI URLs and review outcome in release eviden
 
 Only after explicit publication authorization, manually dispatch `publish.yml`
 on `main`, supplying the **full approved main commit**, version and target.
-Start with `testpypi`. Review the protected-environment job before permitting it.
-The workflow builds, checks and uploads the wheel/sdist; it does not create a
-GitHub release, change visibility or post announcements.
+Target `pypi` means **TestPyPI first, then PyPI**, using the same immutable build
+artifact in one run. Both jobs require their own environment review. Approve
+TestPyPI first; leave PyPI waiting while you verify the rehearsal. The workflow
+does not create a GitHub release, change visibility or post announcements.
+
+The default target `testpypi` ends after rehearsal. That consumes the version on
+TestPyPI: a later new run with that same version will be rejected there. Use a
+separately reviewed prerelease version for a rehearsal-only experiment, or select
+the two-stage path for the actual candidate. Do not hide an existing-file
+conflict with `skip-existing`.
 
 Download the exact TestPyPI artifact and inspect its hashes. Test it in a fresh
 venv: install production dependencies from the reviewed hash lock, then install
@@ -100,13 +107,12 @@ only the downloaded agent-dms wheel with `--no-deps`. Avoid mixing TestPyPI and
 PyPI with `--extra-index-url`, which can select unintended dependency sources.
 Run the demo from the matching source release and verify the README/metadata.
 
-For production, dispatch the same reviewed source with target `pypi`. Each run
-rebuilds from the frozen commit using its timestamp and the locked backend; check
-hashes against rehearsal and stop on an unexplained difference. Do not assume
-reproducibility just because the version matches. The PyPA action verifies the
-artifacts and supplies digital attestations. Retain the run URL and downloaded
-package hashes. Verify the public PyPI JSON, project ownership, version, files
-and a fresh installed-package demo before promotion.
+For production, approve the waiting `pypi` environment job in that same run only
+after verifying the TestPyPI files against its saved SHA256SUMS. The job downloads
+the same `distributions` artifact; it does not rebuild. The PyPA action verifies
+the artifacts and supplies digital attestations. Retain the run URL and package
+hashes. Verify public PyPI JSON, ownership, version, exact file hashes and a fresh
+installed-package demo before promotion. No byte-identical rebuild claim is made.
 
 If upload fails or times out, inspect the index's exact version/file hashes
 first. Never overwrite a version, use `skip-existing` to hide a mismatch, or

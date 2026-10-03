@@ -19,9 +19,10 @@ The server also supports Manager/Worker handoffs, questions, completion reports
 and review replies. It connects existing agents; model execution remains with
 your chosen clients.
 
-**Release candidate for 0.1.0.** Repository/package publication is being prepared.
-Until a release exists, use an authorized source checkout. Linux and Python
-3.11/3.12 are tested. MCP HTTP/stdio interoperability is tested with the official
+**Experimental 0.1 series.** Check
+[Releases](https://github.com/49-Agents/agent-dms/releases) for published versions;
+until one exists, use an authorized source checkout. Linux and Python 3.11/3.12
+are tested. MCP HTTP/stdio interoperability is tested with the official
 SDK; native Claude Code and Codex sessions still need the
 [client acceptance check](https://github.com/49-Agents/agent-dms/blob/main/docs/NATIVE-CLIENT-ACCEPTANCE.md).
 Provider labels in the demo do not represent native model runs.

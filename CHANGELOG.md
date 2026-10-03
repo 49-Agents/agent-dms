@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.1.0 — prepared, not yet released
+## 0.1.0
+
+Release availability, date and artifacts are recorded in
+[GitHub Releases](https://github.com/49-Agents/agent-dms/releases).
 
 Initial experimental release of agent-dms, a project-local MCP mailbox for
 existing agents.
