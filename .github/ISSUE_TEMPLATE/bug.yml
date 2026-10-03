@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a reproducible failure with synthetic data.
+body:
+  - type: markdown
+    attributes:
+      value: "For vulnerabilities, use SECURITY.md. Remove tokens and private message bodies."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and environment
+      description: agent-dms version, OS, Python, MCP client/version, and HTTP or stdio.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Steps using temporary identities and synthetic messages.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual behavior
+      description: Include sanitized error codes and whether a retry or restart changed the result.
+    validations:
+      required: true

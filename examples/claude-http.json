@@ -1,0 +1,1 @@
+{"mcpServers":{"agent-dms":{"type":"http","url":"http://127.0.0.1:8765/mcp","headers":{"Authorization":"Bearer ${AGENT_DMS_TOKEN}"}}}}

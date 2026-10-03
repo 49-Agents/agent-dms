@@ -1,0 +1,801 @@
+{
+  "agent_whoami": {
+    "additionalProperties": false,
+    "properties": {},
+    "title": "agent_whoamiInput",
+    "type": "object"
+  },
+  "session_open": {
+    "additionalProperties": false,
+    "properties": {
+      "client_session_key": {
+        "maxLength": 128,
+        "title": "Client Session Key",
+        "type": "string"
+      },
+      "status": {
+        "maxLength": 262144,
+        "title": "Status",
+        "type": "string"
+      },
+      "availability": {
+        "enum": [
+          "working",
+          "idle",
+          "blocked"
+        ],
+        "title": "Availability",
+        "type": "string"
+      },
+      "takeover": {
+        "default": false,
+        "title": "Takeover",
+        "type": "boolean"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      }
+    },
+    "required": [
+      "client_session_key",
+      "status",
+      "availability",
+      "idempotency_key"
+    ],
+    "title": "session_openInput",
+    "type": "object"
+  },
+  "session_heartbeat": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "session_heartbeatInput",
+    "type": "object"
+  },
+  "session_close": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "session_closeInput",
+    "type": "object"
+  },
+  "agents_list": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      },
+      "include_offline": {
+        "default": false,
+        "title": "Include Offline",
+        "type": "boolean"
+      },
+      "query": {
+        "anyOf": [
+          {
+            "maxLength": 100,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Query"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "agents_listInput",
+    "type": "object"
+  },
+  "agent_get": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "agent_id": {
+        "maxLength": 128,
+        "title": "Agent Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id",
+      "agent_id"
+    ],
+    "title": "agent_getInput",
+    "type": "object"
+  },
+  "status_set": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "status": {
+        "maxLength": 262144,
+        "title": "Status",
+        "type": "string"
+      },
+      "availability": {
+        "enum": [
+          "working",
+          "idle",
+          "blocked"
+        ],
+        "title": "Availability",
+        "type": "string"
+      },
+      "expected_revision": {
+        "minimum": 1,
+        "title": "Expected Revision",
+        "type": "integer"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id",
+      "status",
+      "availability",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "title": "status_setInput",
+    "type": "object"
+  },
+  "dm_send": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "to_agent_id": {
+        "maxLength": 128,
+        "title": "To Agent Id",
+        "type": "string"
+      },
+      "body": {
+        "maxLength": 16000,
+        "title": "Body",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "thread_id": {
+        "anyOf": [
+          {
+            "maxLength": 128,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Thread Id"
+      },
+      "subject": {
+        "anyOf": [
+          {
+            "maxLength": 200,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Subject"
+      },
+      "kind": {
+        "default": "message",
+        "enum": [
+          "message",
+          "handoff",
+          "question",
+          "answer",
+          "completion",
+          "review",
+          "approval"
+        ],
+        "title": "Kind",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id",
+      "to_agent_id",
+      "body",
+      "idempotency_key"
+    ],
+    "title": "dm_sendInput",
+    "type": "object"
+  },
+  "dm_reply": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "message_id": {
+        "maxLength": 128,
+        "title": "Message Id",
+        "type": "string"
+      },
+      "body": {
+        "maxLength": 16000,
+        "title": "Body",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "acknowledge_parent": {
+        "default": false,
+        "title": "Acknowledge Parent",
+        "type": "boolean"
+      },
+      "claim_token": {
+        "anyOf": [
+          {
+            "maxLength": 200,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Claim Token"
+      }
+    },
+    "required": [
+      "session_id",
+      "message_id",
+      "body",
+      "idempotency_key"
+    ],
+    "title": "dm_replyInput",
+    "type": "object"
+  },
+  "threads_list": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "threads_listInput",
+    "type": "object"
+  },
+  "thread_read": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "thread_id": {
+        "maxLength": 128,
+        "title": "Thread Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      }
+    },
+    "required": [
+      "session_id",
+      "thread_id"
+    ],
+    "title": "thread_readInput",
+    "type": "object"
+  },
+  "inbox_peek": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "inbox_peekInput",
+    "type": "object"
+  },
+  "inbox_next": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "session_id",
+      "idempotency_key"
+    ],
+    "title": "inbox_nextInput",
+    "type": "object"
+  },
+  "inbox_ack": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "claim_token": {
+        "maxLength": 200,
+        "title": "Claim Token",
+        "type": "string"
+      },
+      "message_ids": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 100,
+        "minItems": 1,
+        "title": "Message Ids",
+        "type": "array"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "outcome": {
+        "anyOf": [
+          {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Outcome"
+      }
+    },
+    "required": [
+      "session_id",
+      "claim_token",
+      "message_ids",
+      "idempotency_key"
+    ],
+    "title": "inbox_ackInput",
+    "type": "object"
+  },
+  "inbox_release": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "claim_token": {
+        "maxLength": 200,
+        "title": "Claim Token",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "message_ids": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Message Ids"
+      }
+    },
+    "required": [
+      "session_id",
+      "claim_token",
+      "idempotency_key"
+    ],
+    "title": "inbox_releaseInput",
+    "type": "object"
+  },
+  "inbox_renew": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "claim_token": {
+        "maxLength": 200,
+        "title": "Claim Token",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id",
+      "claim_token",
+      "idempotency_key"
+    ],
+    "title": "inbox_renewInput",
+    "type": "object"
+  },
+  "inbox_wait": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "after_revision": {
+        "default": 0,
+        "minimum": 0,
+        "title": "After Revision",
+        "type": "integer"
+      },
+      "timeout_seconds": {
+        "default": 25,
+        "maximum": 25,
+        "minimum": 0,
+        "title": "Timeout Seconds",
+        "type": "number"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "inbox_waitInput",
+    "type": "object"
+  },
+  "workstream_start": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "worker_agent_id": {
+        "maxLength": 128,
+        "title": "Worker Agent Id",
+        "type": "string"
+      },
+      "goal": {
+        "maxLength": 1000,
+        "title": "Goal",
+        "type": "string"
+      },
+      "plan": {
+        "maxLength": 16000,
+        "title": "Plan",
+        "type": "string"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      }
+    },
+    "required": [
+      "session_id",
+      "worker_agent_id",
+      "goal",
+      "plan",
+      "idempotency_key"
+    ],
+    "title": "workstream_startInput",
+    "type": "object"
+  },
+  "workstream_transition": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "workstream_id": {
+        "maxLength": 128,
+        "title": "Workstream Id",
+        "type": "string"
+      },
+      "action": {
+        "enum": [
+          "question",
+          "answer",
+          "complete",
+          "revise",
+          "approve"
+        ],
+        "title": "Action",
+        "type": "string"
+      },
+      "text": {
+        "maxLength": 16000,
+        "title": "Text",
+        "type": "string"
+      },
+      "expected_revision": {
+        "minimum": 1,
+        "title": "Expected Revision",
+        "type": "integer"
+      },
+      "idempotency_key": {
+        "maxLength": 200,
+        "title": "Idempotency Key",
+        "type": "string"
+      },
+      "ack_message_id": {
+        "anyOf": [
+          {
+            "maxLength": 128,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Ack Message Id"
+      },
+      "claim_token": {
+        "anyOf": [
+          {
+            "maxLength": 200,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Claim Token"
+      }
+    },
+    "required": [
+      "session_id",
+      "workstream_id",
+      "action",
+      "text",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "title": "workstream_transitionInput",
+    "type": "object"
+  },
+  "workstreams_list": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      }
+    },
+    "required": [
+      "session_id"
+    ],
+    "title": "workstreams_listInput",
+    "type": "object"
+  },
+  "workstream_get": {
+    "additionalProperties": false,
+    "properties": {
+      "session_id": {
+        "maxLength": 128,
+        "title": "Session Id",
+        "type": "string"
+      },
+      "workstream_id": {
+        "maxLength": 128,
+        "title": "Workstream Id",
+        "type": "string"
+      },
+      "limit": {
+        "default": 20,
+        "maximum": 100,
+        "minimum": 1,
+        "title": "Limit",
+        "type": "integer"
+      },
+      "cursor": {
+        "anyOf": [
+          {
+            "maxLength": 4096,
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Cursor"
+      }
+    },
+    "required": [
+      "session_id",
+      "workstream_id"
+    ],
+    "title": "workstream_getInput",
+    "type": "object"
+  }
+}

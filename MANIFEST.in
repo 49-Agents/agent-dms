@@ -1,0 +1,5 @@
+include requirements.lock requirements-dev.lock LICENSE THIRD_PARTY_NOTICES.md CONTRIBUTING.md SECURITY.md SUPPORT.md CHANGELOG.md server.json Dockerfile compose.yaml
+recursive-include docs *.md *.json
+recursive-include examples *.py *.json *.toml *.md
+recursive-include scripts *.py
+recursive-include tests *.py
