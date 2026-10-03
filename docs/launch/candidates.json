@@ -166,10 +166,15 @@
       "element": "headline",
       "variant": "headline-04",
       "option": "C",
-      "rev": 1,
+      "rev": 2,
       "concept": "Durable handling",
-      "change": "Alternative emphasis",
-      "text": "A durable mailbox between agents"
+      "change": "Owner requested exact wording: let agents DM each other",
+      "text": "let agents DM each other",
+      "derived_from": {
+        "round_id": "round-001",
+        "candidate_id": "headline-04-C",
+        "rev": 1
+      }
     },
     {
       "id": "headline-04-D",
@@ -664,9 +669,9 @@
   ],
   "combinations": [
     {
-      "label": "Suggested starting pair, not owner-approved",
+      "label": "Owner-selected headline with suggested short post",
       "ids": [
-        "headline-01-A",
+        "headline-04-C",
         "post-01-A"
       ]
     }

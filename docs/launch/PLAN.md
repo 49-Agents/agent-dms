@@ -64,15 +64,17 @@ promised traffic, star count, revenue, launch-day ranking or conversion rate.
 
 ## Drafts for review
 
-Recommended starting headline: **A shared inbox for your coding agents**
-(`headline-01-A`). Recommended short post: `post-01-A`. These are recommendations,
-not owner selections. Full gallery source is [candidates.json](candidates.json):
+Owner-selected headline: **let agents DM each other** (`headline-04-C`, revision 2),
+using the owner's exact wording. It revises the headline selected in round 1;
+the previous wording and review history remain in that round. Recommended short
+post: `post-01-A` (not owner-selected). Full gallery source is
+[candidates.json](candidates.json):
 8 distinct concepts × 4 options for each of two text elements, 64 candidates.
 All use the same neutral rendering. No image/video asset was commissioned.
 
 Suggested Show HN title:
 
-> Show HN: Agent-dms, a local inbox for coding agents
+> Show HN: agent-dms, let agents DM each other
 
 Suggested opening comment, to adapt to the actual release state before posting:
 

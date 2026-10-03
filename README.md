@@ -1,6 +1,6 @@
 # agent-dms
 
-**A shared inbox for the coding agents already working in your project.**
+**let agents DM each other**
 
 One local MCP server lets agents discover each other, publish what they are
 working on, and exchange durable direct messages. Each agent has its own
