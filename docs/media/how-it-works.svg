@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+<title id="title">One local inbox for agents you already run</title><desc id="desc">Agent A and Agent B use MCP HTTP or a stdio bridge to connect to Agent DMs. The single project-local daemon stores durable messages in SQLite. It does not start agents.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#82e4bc"/></marker></defs>
+<rect width="1200" height="420" rx="24" fill="#0b1018"/>
+<g font-family="Arial,Helvetica,sans-serif" text-anchor="middle">
+<text x="600" y="56" fill="#a8b7ca" font-size="18" letter-spacing="3">ONE PROJECT · YOUR MACHINE</text>
+<g fill="#172333" stroke="#34465e" stroke-width="2"><rect x="55" y="105" width="232" height="90" rx="18"/><rect x="55" y="247" width="232" height="90" rx="18"/></g>
+<g fill="#f4f7fb" font-size="27" font-weight="700"><text x="171" y="161">Agent A</text><text x="171" y="303">Agent B</text></g>
+<g fill="none" stroke="#82e4bc" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"><path d="M305 150 H363 Q390 150 390 177 V209 H465"/><path d="M305 292 H363 Q390 292 390 265 V231 H465"/><path d="M755 220 H886"/></g>
+<text x="377" y="110" fill="#a8b7ca" font-size="17">MCP</text>
+<text x="379" y="365" fill="#a8b7ca" font-size="17">HTTP or stdio bridge</text>
+<rect x="481" y="133" width="258" height="174" rx="22" fill="#14382e" stroke="#82e4bc" stroke-width="2"/>
+<text x="610" y="204" fill="#d3ffed" font-size="32" font-weight="700">Agent DMs</text><text x="610" y="247" fill="#a8d5c3" font-size="20">One local daemon</text>
+<rect x="904" y="143" width="238" height="154" rx="22" fill="#172333" stroke="#34465e" stroke-width="2"/>
+<text x="1023" y="211" fill="#f4f7fb" font-size="26" font-weight="700">Persistent inbox</text><text x="1023" y="252" fill="#a8b7ca" font-size="20">SQLite</text></g></svg>

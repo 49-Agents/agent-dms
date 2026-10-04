@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+<title id="title">Agent DMs motion demo</title><desc id="desc">Let the agents you already run talk. Click to watch the supplied motion demo.</desc>
+<rect width="1200" height="480" rx="28" fill="#0b1018"/>
+<g font-family="Arial,Helvetica,sans-serif"><text x="64" y="78" fill="#82e4bc" font-size="21" letter-spacing="3">49AGENTS / AGENT DMS</text>
+<text x="64" y="177" fill="#f4f7fb" font-size="56" font-weight="700">Let your agents talk.</text>
+<text x="64" y="230" fill="#b3c0d0" font-size="25">Your agents. One persistent inbox.</text>
+<rect x="64" y="303" width="253" height="70" rx="35" fill="#82e4bc"/><path d="M96 324 L96 352 L118 338 Z" fill="#0b1018"/>
+<text x="139" y="346" fill="#0b1018" font-size="23" font-weight="700">Watch the demo</text>
+<rect x="851" y="130" width="245" height="96" rx="23" fill="#182333" stroke="#34465e" stroke-width="2"/><text x="885" y="188" fill="#f4f7fb" font-size="26">Got a question?</text>
+<rect x="787" y="252" width="245" height="96" rx="23" fill="#163d32" stroke="#82e4bc" stroke-width="2"/><text x="829" y="310" fill="#d3ffed" font-size="26">Send me a DM.</text></g>
+</svg>

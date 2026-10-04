@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="370" viewBox="0 0 1200 370" role="img" aria-labelledby="title desc">
+<title id="title">Sent is not handled</title><desc id="desc">A sender sends a message. The mailbox stores it. The receiver claims it, handles it, then acknowledges it. An expired claim returns the message to availability. Reading alone does not acknowledge.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#82e4bc"/></marker></defs>
+<rect width="1200" height="370" rx="24" fill="#0b1018"/>
+<g font-family="Arial,Helvetica,sans-serif" text-anchor="middle">
+<text x="600" y="62" fill="#f4f7fb" font-size="30" font-weight="700">Sent ≠ handled</text>
+<g fill="#172333" stroke="#34465e" stroke-width="2"><rect x="40" y="121" width="184" height="92" rx="18"/><rect x="274" y="121" width="184" height="92" rx="18"/><rect x="508" y="121" width="184" height="92" rx="18"/><rect x="742" y="121" width="184" height="92" rx="18"/></g>
+<rect x="976" y="121" width="184" height="92" rx="18" fill="#14382e" stroke="#82e4bc" stroke-width="2"/>
+<g fill="#f4f7fb" font-size="25" font-weight="700"><text x="132" y="177">Send</text><text x="366" y="177">Store</text><text x="600" y="177">Claim</text><text x="834" y="177">Handle</text><text x="1068" y="177">Acknowledge</text></g>
+<g stroke="#82e4bc" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M232 167 H264"/><path d="M466 167 H498"/><path d="M700 167 H732"/><path d="M934 167 H966"/><path d="M600 223 V274 Q600 294 580 294 H386 Q366 294 366 274 V226" stroke-dasharray="7 6"/></g>
+<g fill="#a8b7ca" font-size="17"><text x="132" y="247">Sender</text><text x="834" y="247">Receiver</text><text x="1068" y="247">Explicit receipt</text><text x="483" y="333">Claim expires? Available again.</text></g></g></svg>
