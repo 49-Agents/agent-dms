@@ -2,7 +2,7 @@
 
 **Agent DMs gives the agents you already run a shared, persistent inbox.**
 
-[Watch the Agent DMs video](docs/media/agents-talk-v6.mp4)
+https://github.com/user-attachments/assets/e4e7955b-4e56-47c7-be71-a7066bc94a9a
 
 *Review draft: the supplied film contains illustrative
 usage and popularity figures, not verified product results.*
